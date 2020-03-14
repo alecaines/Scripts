@@ -1,2 +1,1 @@
-1) Need to remove files from orig dir
-	1.1) use glob and make edit to getFiles
+1) Write shell script to run aggregate.py
