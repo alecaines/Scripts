@@ -31,14 +31,13 @@ class AGGREGATOR(object):
                 for path in grouping:
                     if name in path:
                         shutil.copy(os.getcwd()+"\\"+path.replace(".\\",""),os.getcwd()+"\\"+name)
+                        os.remove(os.getcwd()+"\\"+path.replace(".\\", ""))
 
     def removeEmptyDirs(self):
         dirs = list(filter(lambda d: '.' not in d ,os.listdir()))
-        for f in dirs:
-            num_files = len(glob.glob('./'+f))
-            print(f, num_files)
-            if num_files == 0:
-                os.rmdir(f)
+        for d in dirs:
+            if len(os.listdir(os.getcwd()+"\\"+d)) == 0:
+                os.rmdir(d)
 
     def main(self):
         file_paths = glob.glob('./*')
@@ -46,8 +45,8 @@ class AGGREGATOR(object):
         file_names = list(set(self.getFileNames(files)))
         aggregates = self.getAggregates(file_paths, file_names)
         self.makeDirs(file_names, aggregates)
-        os.rmdir(os.getcwd()+'\\aggregate')
-#        self.removeEmptyDirs()
+        self.removeEmptyDirs()
+
 if __name__ == "__main__":
     AGGREGATOR().main()
     
