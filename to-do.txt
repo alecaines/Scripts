@@ -1,1 +1,1 @@
-1) Write shell script to run aggregate.py
+1) I still do not know why it is having problems creating directories. Goodness gracious

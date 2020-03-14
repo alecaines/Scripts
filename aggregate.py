@@ -26,7 +26,8 @@ class AGGREGATOR(object):
     def makeDirs(self, file_names, aggregates):
         sizeable = list(filter(lambda agg: len(agg) > 1, aggregates))       
         for name in file_names:
-            os.mkdir(name)
+            if not os.path.exists(name):
+                os.mkdir(name)
             for grouping in sizeable:
                 for path in grouping:
                     if name in path and os.path.exists(os.getcwd()+"\\"+path.replace(".\\","")):
