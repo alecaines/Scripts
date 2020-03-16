@@ -35,10 +35,19 @@ class AGGREGATOR(object):
                         os.remove(os.getcwd()+"\\"+path.replace(".\\", ""))
 
     def removeEmptyDirs(self):
-        dirs = list(filter(lambda d: '.' not in d ,os.listdir()))
+        dirs = list(filter(lambda d: '.' not in d, os.listdir()))
         for d in dirs:
             if len(os.listdir(os.getcwd()+"\\"+d)) == 0:
                 os.rmdir(d)
+
+    def pickUpDotUns(self):
+        dtdu = list(filter(lambda s: '.tex.un' in s, os.listdir()))
+        dirs = list(filter(lambda s: '.' not in s, os.listdir()))
+        for dr in dirs:
+            for tu in dtdu:
+                if dr in tu:
+                    shutil.copy(os.getcwd()+"\\"+tu.replace(".\\",""),os.getcwd()+"\\"+dr)
+                    os.remove(os.getcwd()+"\\"+tu.replace(".\\",""))
 
     def main(self):
         file_paths = glob.glob('./*')
@@ -46,6 +55,7 @@ class AGGREGATOR(object):
         file_names = list(set(self.getFileNames(files)))
         aggregates = self.getAggregates(file_paths, file_names)
         self.makeDirs(file_names, aggregates)
+        self.pickUpDotUns()
         self.removeEmptyDirs()
 
 if __name__ == "__main__":
