@@ -42,6 +42,7 @@ class AGGREGATOR(object):
 
     def pickUpDotUns(self):
         dtdu = list(filter(lambda s: '.tex.un' in s, os.listdir()))
+        print(dtdu)
         dirs = list(filter(lambda s: '.' not in s, os.listdir()))
         for dr in dirs:
             for tu in dtdu:
