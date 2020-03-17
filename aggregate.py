@@ -3,6 +3,7 @@ Author: Alexander Caines
 Description: If multiple files occur with the same name but different file types, aggregate them into
 their respective files.
 '''
+
 import shutil
 import glob 
 import os
@@ -24,33 +25,41 @@ class AGGREGATOR(object):
         return second_pass
     
     def makeDirs(self, file_names, aggregates):
-        sizeable = list(filter(lambda agg: len(agg) > 1, aggregates))       
+        sizeable = list(filter(lambda agg: len(agg) > 1, aggregates))
+        sans_bars =[list(map(lambda e: e.replace(".\\", ""), grouping)) for grouping in sizeable]
+        sizeable_names = [list(map(lambda e: e[:e.index(".")], grouping)) for grouping in sans_bars] 
+
         for name in file_names:
             if not os.path.exists(name):
                 os.mkdir(name)
             for grouping in sizeable:
                 for path in grouping:
-                    if name in path and os.path.exists(os.getcwd()+"\\"+path.replace(".\\","")):
-                        shutil.copy(os.getcwd()+"\\"+path.replace(".\\",""),os.getcwd()+"\\"+name)
-                        os.remove(os.getcwd()+"\\"+path.replace(".\\", ""))
+                    if name+"." in path and os.path.exists(name):
+                        if os.path.isfile(name):
+                            os.remove(os.path.isfile(name))
+                        else:                            
+                            shutil.copy(os.getcwd()+"\\"+path.replace(".\\",""),os.getcwd()+"\\"+name)
+                            os.remove(os.getcwd()+"\\"+path.replace(".\\", ""))
 
     def removeEmptyDirs(self):
         dirs = list(filter(lambda d: '.' not in d, os.listdir()))
         for d in dirs:
-            if len(os.listdir(os.getcwd()+"\\"+d)) == 0:
+            if os.path.isfile(os.getcwd()+"\\"+d):
+                os.remove(os.getcwd()+"\\"+d)
+            elif len(os.listdir(os.getcwd()+"\\"+d)) == 0:
                 os.rmdir(d)
 
     def pickUpDotUns(self):
         dtdu = list(filter(lambda s: '.tex.un' in s, os.listdir()))
-        print(dtdu)
         dirs = list(filter(lambda s: '.' not in s, os.listdir()))
-        for dr in dirs:
-            for tu in dtdu:
-                if dr in tu:
-                    shutil.copy(os.getcwd()+"\\"+tu.replace(".\\",""),os.getcwd()+"\\"+dr)
-                    os.remove(os.getcwd()+"\\"+tu.replace(".\\",""))
+
+        for d in dirs:
+            if "."+d+".tex.un~" in dtdu:
+                shutil.copy(os.getcwd()+"\\"+"."+d+".tex.un~", os.getcwd()+"\\"+d)
+                os.remove(os.getcwd()+"\\"+"."+d+".tex.un~")
 
     def main(self):
+        self.removeEmptyDirs()
         file_paths = glob.glob('./*')
         files = self.getFiles(file_paths)
         file_names = list(set(self.getFileNames(files)))
@@ -61,4 +70,7 @@ class AGGREGATOR(object):
 
 if __name__ == "__main__":
     AGGREGATOR().main()
-    
+    print("============================================================================")
+    print("Files have been succesffully aggregated. Those files which occur in\n multiplicity are moved into folders with their respective filename.\nAll singular files are left without grouping folders.")    
+
+    print("============================================================================")
