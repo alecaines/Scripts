@@ -1,1 +1,1 @@
-1) I still do not know why it is having problems creating directories. Goodness gracious
+1) Work on creating shell script to run aggregate.py
